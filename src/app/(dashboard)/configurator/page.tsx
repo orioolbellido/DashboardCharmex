@@ -1,14 +1,30 @@
 "use client";
 
 import { useState } from "react";
-import { Rack3DVisualizer, RackItem } from "@/components/canvas/Rack3DVisualizer";
+import dynamic from "next/dynamic";
 import { SignalMatrixCanvas } from "@/components/canvas/SignalMatrixCanvas";
-import { EngineReportPDF, PDFReportData } from "@/components/reports/EngineReportPDF";
-import { pdf } from "@react-pdf/renderer";
+import type { PDFReportData } from "@/components/reports/EngineReportPDF";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Download, MonitorPlay } from "lucide-react";
+
+// Para evitar problemas de SSR con canvas y react-three-fiber
+const Rack3DVisualizer = dynamic(
+  () => import("@/components/canvas/Rack3DVisualizer").then(mod => mod.Rack3DVisualizer),
+  { ssr: false }
+);
+
+// We need the type for RackItem since we are using it
+export type RackItem = {
+  id: string;
+  model: string;
+  brand: "NovaStar" | "Pixelhue" | "Other";
+  ru: number; // Rack Units (1U = 0.044m approx in our scale)
+  positionIndex: number; // Position from bottom (1 to 42)
+  status: "ONLINE" | "ERROR" | "WARN";
+  ports: number;
+};
 
 const mockRackItems: RackItem[] = [
   { id: "mx40-1", model: "MX40 Pro", brand: "NovaStar", ru: 2, positionIndex: 10, status: "ONLINE", ports: 20 },
@@ -43,6 +59,8 @@ export default function ConfiguratorPage() {
   const generateAndDownloadPDF = async () => {
     setIsGeneratingPDF(true);
     try {
+      const { pdf } = await import("@react-pdf/renderer");
+      const { EngineReportPDF } = await import("@/components/reports/EngineReportPDF");
       const blob = await pdf(<EngineReportPDF data={mockPDFData} />).toBlob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");

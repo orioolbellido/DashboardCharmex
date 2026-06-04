@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Sidebar,
   SidebarContent,
@@ -60,11 +62,9 @@ export function AppSidebar() {
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <a href={item.url} className="hover:bg-accent/50 hover:text-foreground">
-                      <item.icon className="text-brand-pixelhue" />
-                      <span>{item.title}</span>
-                    </a>
+                  <SidebarMenuButton onClick={() => window.location.href = item.url} className="hover:bg-accent/50 hover:text-foreground">
+                    <item.icon className="text-brand-pixelhue" />
+                    <span>{item.title}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
