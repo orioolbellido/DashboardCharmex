@@ -42,7 +42,8 @@ function EquipmentUnit({
 
   // Posicionamiento en Y (asumiendo que el rack tiene 42U y su centro está en Y=0)
   // 42U * 0.044 = 1.848m total height. Bottom is at -0.924
-  const yPos = -0.924 + (item.positionIndex * RU_HEIGHT) + (item.ru * RU_HEIGHT) / 2;
+  const yBase = -0.924 + ((item.positionIndex - 1) * RU_HEIGHT);
+  const yPos = yBase + (item.ru * RU_HEIGHT) / 2;
 
   useFrame(() => {
     if (meshRef.current) {
@@ -111,6 +112,23 @@ function EquipmentUnit({
 }
 
 function RackChassis() {
+  const rails = [];
+  for(let i=1; i<=42; i++) {
+    const yRail = -0.924 + ((i - 1) * RU_HEIGHT) + (RU_HEIGHT / 2);
+    rails.push(
+      <group key={i} position={[0, yRail, 0.35]}>
+        <mesh position={[-0.53, 0, 0]}>
+          <boxGeometry args={[0.02, 0.005, 0.02]} />
+          <meshBasicMaterial color="#71717a" />
+        </mesh>
+        <mesh position={[0.53, 0, 0]}>
+          <boxGeometry args={[0.02, 0.005, 0.02]} />
+          <meshBasicMaterial color="#71717a" />
+        </mesh>
+      </group>
+    );
+  }
+
   return (
     <group position={[0, 0, 0]}>
       {/* Estructura alámbrica del chasis */}
@@ -132,7 +150,7 @@ function RackChassis() {
         />
       </mesh>
 
-      {/* Raíles laterales */}
+      {/* Raíles laterales y separadores U */}
       <mesh position={[-0.55, 0, 0.35]}>
         <cylinderGeometry args={[0.02, 0.02, 2.2, 16]} />
         <meshStandardMaterial color="#52525b" metalness={0.8} />
@@ -141,6 +159,7 @@ function RackChassis() {
         <cylinderGeometry args={[0.02, 0.02, 2.2, 16]} />
         <meshStandardMaterial color="#52525b" metalness={0.8} />
       </mesh>
+      {rails}
     </group>
   );
 }

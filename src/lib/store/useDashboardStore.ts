@@ -16,6 +16,7 @@ interface DashboardState {
 
 const supabase = createClient();
 let subscriptionChannel: ReturnType<typeof supabase.channel> | null = null;
+let realtimeTimeout: NodeJS.Timeout | null = null;
 
 export const useDashboardStore = create<DashboardState>((set, get) => ({
   realtimeStatus: 'disconnected',
@@ -78,6 +79,14 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
     if (subscriptionChannel) return; // Already subscribed
 
     get().setRealtimeStatus('connecting');
+    
+    if (realtimeTimeout) clearTimeout(realtimeTimeout);
+    realtimeTimeout = setTimeout(() => {
+      if (get().realtimeStatus === 'connecting') {
+        get().setRealtimeStatus('error');
+        console.warn('Realtime subscription timed out. Falling back to offline/error state.');
+      }
+    }, 5000);
 
     subscriptionChannel = supabase
       .channel('dashboard-kpis')
@@ -85,7 +94,6 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
         'postgres_changes',
         { event: '*', schema: 'public', table: 'projects' },
         () => {
-          // Re-fetch KPIs for projects
           get().fetchInitialKPIs();
         }
       )
@@ -93,7 +101,6 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
         'postgres_changes',
         { event: '*', schema: 'public', table: 'support_tickets' },
         () => {
-          // Re-fetch KPIs for tickets
           get().fetchInitialKPIs();
         }
       )
@@ -101,17 +108,19 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
         'postgres_changes',
         { event: '*', schema: 'public', table: 'inventory_units' },
         () => {
-          // Re-fetch KPIs for inventory
           get().fetchInitialKPIs();
         }
       )
       .subscribe((status) => {
+        if (realtimeTimeout) clearTimeout(realtimeTimeout);
         if (status === 'SUBSCRIBED') {
           get().setRealtimeStatus('connected');
         } else if (status === 'CHANNEL_ERROR') {
           get().setRealtimeStatus('error');
         } else if (status === 'CLOSED') {
           get().setRealtimeStatus('disconnected');
+        } else if (status === 'TIMED_OUT') {
+          get().setRealtimeStatus('error');
         }
       });
   },
