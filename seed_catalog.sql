@@ -1,8 +1,8 @@
 -- Insertar marcas (NovaStar y Pixelhue)
-INSERT INTO public.brands (id, name, manufacturer_code)
+INSERT INTO public.brands (id, name, accent_color)
 VALUES 
-    ('00000000-0000-0000-0000-000000000001', 'NovaStar', 'NOV'),
-    ('00000000-0000-0000-0000-000000000002', 'Pixelhue', 'PIX')
+    ('00000000-0000-0000-0000-000000000001', 'NovaStar', '#dc2626'),
+    ('00000000-0000-0000-0000-000000000002', 'Pixelhue', '#2563eb')
 ON CONFLICT (name) DO NOTHING;
 
 -- Insertar productos investigados (NovaStar MX40 Pro y Pixelhue Q8)
