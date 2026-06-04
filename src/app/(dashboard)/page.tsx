@@ -154,7 +154,7 @@ export default function DashboardPage() {
               <CardTitle className="text-slate-100">Accesos Rápidos</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <Button variant="outline" className="h-20 flex flex-col gap-2 border-zinc-800 bg-zinc-950 hover:bg-zinc-800 hover:text-slate-100">
                   <Calculator className="w-5 h-5 text-brand-pixelhue" />
                   <span className="text-xs">Calculadora</span>
@@ -166,10 +166,6 @@ export default function DashboardPage() {
                 <Button variant="outline" className="h-20 flex flex-col gap-2 border-zinc-800 bg-zinc-950 hover:bg-zinc-800 hover:text-slate-100">
                   <Ticket className="w-5 h-5 text-amber-500" />
                   <span className="text-xs">Crear Ticket</span>
-                </Button>
-                <Button variant="outline" className="h-20 flex flex-col gap-2 border-zinc-800 bg-zinc-950 hover:bg-zinc-800 hover:text-slate-100">
-                  <TerminalSquare className="w-5 h-5 text-brand-novastar" />
-                  <span className="text-xs">Copilot IA</span>
                 </Button>
               </div>
             </CardContent>

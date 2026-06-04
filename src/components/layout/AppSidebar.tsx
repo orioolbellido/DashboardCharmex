@@ -25,6 +25,11 @@ const items = [
     icon: Package,
   },
   {
+    title: "Configurador 3D",
+    url: "/configurator",
+    icon: MonitorPlay,
+  },
+  {
     title: "Firmware",
     url: "/firmware",
     icon: Cpu,
@@ -33,11 +38,6 @@ const items = [
     title: "Soporte y KB",
     url: "/support",
     icon: BookOpen,
-  },
-  {
-    title: "Copilot IA",
-    url: "/copilot",
-    icon: TerminalSquare,
   }
 ]
 
