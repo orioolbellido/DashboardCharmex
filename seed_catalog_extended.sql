@@ -2,10 +2,10 @@
 -- Ejecutar en Supabase SQL Editor
 
 -- 1. Insertar Marcas (asegurando que existan)
-INSERT INTO public.brands (id, name, manufacturer_code)
+INSERT INTO public.brands (id, name, accent_color)
 VALUES 
-    ('00000000-0000-0000-0000-000000000001', 'NovaStar', 'NOV'),
-    ('00000000-0000-0000-0000-000000000002', 'Pixelhue', 'PIX')
+    ('00000000-0000-0000-0000-000000000001', 'NovaStar', '#dc2626'),
+    ('00000000-0000-0000-0000-000000000002', 'Pixelhue', '#2563eb')
 ON CONFLICT (name) DO NOTHING;
 
 -- 2. Asegurarse de que existan categorías
